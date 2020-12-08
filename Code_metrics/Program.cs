@@ -6,7 +6,14 @@ namespace Code_metrics
     {
         static void Main(string[] args)
         {
-            ZipReader.Read();
+            App();
         }
+
+        static void App()
+        {
+            var analyzer = new Analyzer();
+            analyzer.Read();
+
+        }    
     }
 }

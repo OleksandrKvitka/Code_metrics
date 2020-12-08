@@ -6,9 +6,13 @@ using System.Text;
 
 namespace Code_metrics
 {
-    public static class ZipReader
+    public class Analyzer
     {
-        public static void Read()
+        public int BlankLoc;
+        public int PhisicLoc;
+        public int LogicLoc;
+        public int CommentLoc;
+        public void Read()
         {
             string zipPath = @"D:\!Kvitka\training\Euro_diffusion.zip";
             using (ZipArchive archive = ZipFile.OpenRead(zipPath))
@@ -21,12 +25,19 @@ namespace Code_metrics
                         {
                             while (reader.Peek() >= 0)
                             {
-                                Console.WriteLine(reader.ReadLine());
+                                Analyze(reader.ReadLine());
                             }
                         }
                     }
                 }
             }
+        }
+
+        public void Analyze(string str)
+        {
+            PhisicLoc++;
+            if (String.IsNullOrWhiteSpace(str))
+                BlankLoc++;
         }
     }
 }
