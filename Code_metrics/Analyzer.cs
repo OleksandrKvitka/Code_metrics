@@ -43,7 +43,7 @@ namespace Code_metrics
             PhisicLoc = LinesList.Count;
             BlankLoc = CalculateBlankLoc();
             CommentLoc = CalculateCommentedLoc();
-            //LogicLoc = CalculateLogicalLoc();
+            LogicLoc = CalculateLogicalLoc();
         }
 
         public void Print()
@@ -51,7 +51,7 @@ namespace Code_metrics
             Console.WriteLine($"Count of phisic lines of code = {PhisicLoc}");
             Console.WriteLine($"Count of blank lines of code = {BlankLoc}");
             Console.WriteLine($"Count of commented lines of code = {CommentLoc}");
-            //Console.WriteLine($"Count of logic lines of code = {LogicLoc}");
+            Console.WriteLine($"Count of logic lines of code = {LogicLoc}");
         }
 
         public int CalculateBlankLoc()
@@ -108,38 +108,40 @@ namespace Code_metrics
         public int CalculateLogicalLoc()
         {
             int counterLoc = 0;
-            var keywords = new string[] { "else", "if", "?", "try", "catch", "switch", "for", "while", "return", "break", "goto", "exit", "continue", "throw",  "finally", ";", "namespace" };
+            var keywords = new string[] { " else ", " if ", "?", " try ", " catch ", " switch ", " for ", " foreach ", " while ", " return ", " break ", " goto ", " exit ", " continue ", " throw ",  " finally ", ";"};
+            int i = 0;
             foreach (string _line in LinesList)
             {
                 string line = _line;
                 bool isChecked = false;
-                while (!isChecked)
+                foreach (string keyword in keywords)
                 {
-                    foreach (string keyword in keywords)
+                    while (line.Contains(keyword))
                     {
-                        if (line.Contains(keyword))
+                        if (keyword == "?" && line.Contains(":"))
                         {
-                            if (keyword == "?" && line.Contains(":"))
-                            {
-                                line = line.TrimStart('?');
-                                line = line.TrimStart(':');
-                            }
-                            else if (keyword == "else" && line.Contains("else if"))
-                            {
-                                line.Remove(line.IndexOf(keyword), keyword.Length + 3);
-                            }
-                            else
-                                line.Remove(line.IndexOf(keyword), keyword.Length);
-                            counterLoc++;
+                            line = line.Remove(line.IndexOf("?"), 1);
+                            line = line.Remove(line.IndexOf(":"), 1);
                         }
-                        else if (line.Contains("("))
+                        else if (keyword == " else " && line.Contains(" else if "))
                         {
-                            counterLoc++;
-                            line = line.TrimStart('(');
+                            line = line.Remove(line.IndexOf(keyword), keyword.Length + 3);
                         }
                         else
-                            isChecked = true;
-                    }      
+                            line = line.Remove(line.IndexOf(keyword), keyword.Length);
+                        counterLoc++;
+                        isChecked = true;
+                    }
+                }
+                while (line.Contains("(") && !isChecked)
+                {
+                    counterLoc++;
+                    line = line.Remove(line.IndexOf("("), 1);
+                }
+                i++;
+                if (i == 69)
+                {
+                    i--;
                 }
             }
             return counterLoc;
