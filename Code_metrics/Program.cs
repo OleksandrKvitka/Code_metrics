@@ -12,8 +12,9 @@ namespace Code_metrics
         static void App()
         {
             var analyzer = new Analyzer();
-            analyzer.Read();
-
+            analyzer.Read(@"D:\!Kvitka\training\Euro_diffusion.zip");
+            analyzer.CalculateAllMetrics();
+            analyzer.Print();
         }    
     }
 }
