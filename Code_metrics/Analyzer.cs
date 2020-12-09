@@ -74,7 +74,7 @@ namespace Code_metrics
             bool isComment = false;
             foreach (string line in LinesList)
             {
-                for (int i = 0; i < line.Length; i++)
+                for (int i = 0; i < line.Length - 1; i++)
                 {
                     if (line[i] == '/' && !isComment)
                     {
@@ -114,8 +114,7 @@ namespace Code_metrics
             {
                 if (!String.IsNullOrWhiteSpace(_line))
                 {
-                    //string line = CleanFromText(_line);
-                    string line = _line;
+                    string line = CleanFromText(_line);
                     bool isChecked = false;
                     foreach (string keyword in keywords)
                     {
@@ -146,14 +145,14 @@ namespace Code_metrics
             return counterLoc;
         }
 
-        public string CleanFromText(string str)
+        public static string CleanFromText(string str)
         {
             var symbol1 = '"'.ToString();
             var symbol2 = "'";
             int amount1 = new Regex(symbol1).Matches(str).Count;
-            string resString = "";
             if (amount1 % 2 == 0)
             {
+                string resString = "";
                 var substring = str.Split(symbol1);
                 for (int i = 0; i < substring.Length; i++)
                 {
@@ -165,6 +164,7 @@ namespace Code_metrics
             int amount2 = new Regex(symbol2).Matches(str).Count;
             if (amount2 % 2 == 0)
             {
+                string resString = "";
                 var substring = str.Split(symbol2);
                 for (int i = 0; i < substring.Length; i++)
                 {

@@ -12,7 +12,7 @@ namespace Code_metrics
         static void App()
         {
             var analyzer = new Analyzer();
-            analyzer.Read(@"D:\!Kvitka\training\Euro_diffusion.zip");
+            analyzer.Read(@"D:\Studing\University\!Магистратура\Хицко\Лабы\App_Code.zip");
             analyzer.CalculateAllMetrics();
             analyzer.Print();
         }    
