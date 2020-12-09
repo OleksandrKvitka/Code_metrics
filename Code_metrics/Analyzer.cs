@@ -14,6 +14,7 @@ namespace Code_metrics
         public int PhisicLoc;
         public int LogicLoc;
         public int CommentLoc;
+        public double CommentLevel;
 
         public Analyzer()
         {
@@ -45,13 +46,14 @@ namespace Code_metrics
             BlankLoc = CalculateBlankLoc();
             CommentLoc = CalculateCommentedLoc();
             LogicLoc = CalculateLogicalLoc();
+            CommentLevel = Math.Round((double) CommentLoc / (double) PhisicLoc, 1);
         }
 
         public void Print()
         {
             Console.WriteLine($"Count of phisic lines of code = {PhisicLoc}");
             Console.WriteLine($"Count of blank lines of code = {BlankLoc}");
-            Console.WriteLine($"Count of commented lines of code = {CommentLoc}");
+            Console.WriteLine($"Count of commented lines of code = {CommentLoc}, level of commenting = {CommentLevel}");
             Console.WriteLine($"Count of logic lines of code = {LogicLoc}");
         }
 
