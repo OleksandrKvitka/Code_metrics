@@ -3,6 +3,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Code_metrics
 {
@@ -109,47 +110,71 @@ namespace Code_metrics
         {
             int counterLoc = 0;
             var keywords = new string[] { " else ", " if ", "?", " try ", " catch ", " switch ", " for ", " foreach ", " while ", " return ", " break ", " goto ", " exit ", " continue ", " throw ",  " finally ", ";"};
-            int i = 0;
             foreach (string _line in LinesList)
             {
-                string line = _line;
-                bool isChecked = false;
-                foreach (string keyword in keywords)
+                if (!String.IsNullOrWhiteSpace(_line))
                 {
-                    while (line.Contains(keyword))
+                    //string line = CleanFromText(_line);
+                    string line = _line;
+                    bool isChecked = false;
+                    foreach (string keyword in keywords)
                     {
-                        if (keyword == "?" && line.Contains(":"))
+                        while (line.Contains(keyword))
                         {
-                            line = line.Remove(line.IndexOf("?"), 1);
-                            line = line.Remove(line.IndexOf(":"), 1);
+                            if (keyword == "?" && line.Contains(":"))
+                            {
+                                line = line.Remove(line.IndexOf("?"), 1);
+                                line = line.Remove(line.IndexOf(":"), 1);
+                            }
+                            else if (keyword == " else " && line.Contains(" else if "))
+                            {
+                                line = line.Remove(line.IndexOf(keyword), keyword.Length + 3);
+                            }
+                            else
+                                line = line.Remove(line.IndexOf(keyword), keyword.Length);
+                            counterLoc++;
+                            isChecked = true;
                         }
-                        else if (keyword == " else " && line.Contains(" else if "))
-                        {
-                            line = line.Remove(line.IndexOf(keyword), keyword.Length + 3);
-                        }
-                        else
-                            line = line.Remove(line.IndexOf(keyword), keyword.Length);
-                        counterLoc++;
-                        isChecked = true;
                     }
-                }
-                while (line.Contains("(") && !isChecked)
-                {
-                    counterLoc++;
-                    line = line.Remove(line.IndexOf("("), 1);
-                }
-                i++;
-                if (i == 69)
-                {
-                    i--;
+                    while (line.Contains("(") && !isChecked)
+                    {
+                        counterLoc++;
+                        line = line.Remove(line.IndexOf("("), 1);
+                    }
                 }
             }
             return counterLoc;
         }
 
-        //public bool isText(string str)
-        //{
+        public string CleanFromText(string str)
+        {
+            var symbol1 = '"'.ToString();
+            var symbol2 = "'";
+            int amount1 = new Regex(symbol1).Matches(str).Count;
+            string resString = "";
+            if (amount1 % 2 == 0)
+            {
+                var substring = str.Split(symbol1);
+                for (int i = 0; i < substring.Length; i++)
+                {
+                    if (i % 2 == 0)
+                        resString += substring[i];
+                }
+                str = resString;
+            }
+            int amount2 = new Regex(symbol2).Matches(str).Count;
+            if (amount2 % 2 == 0)
+            {
+                var substring = str.Split(symbol2);
+                for (int i = 0; i < substring.Length; i++)
+                {
+                    if (i % 2 == 0)
+                        resString += substring[i];
+                }
+                str = resString;
+            }
 
-        //}
+            return str;
+        }
     }
 }
