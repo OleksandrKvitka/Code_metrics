@@ -149,33 +149,22 @@ namespace Code_metrics
 
         public static string CleanFromText(string str)
         {
-            var symbol1 = '"'.ToString();
-            var symbol2 = "'";
-            int amount1 = new Regex(symbol1).Matches(str).Count;
-            if (amount1 % 2 == 0)
+            string [] symbols = { '"'.ToString(), "'" };
+            foreach (string symbol in symbols)
             {
-                string resString = "";
-                var substring = str.Split(symbol1);
-                for (int i = 0; i < substring.Length; i++)
+                int amount = new Regex(symbol).Matches(str).Count;
+                if (amount % 2 == 0)
                 {
-                    if (i % 2 == 0)
-                        resString += substring[i];
+                    string resString = "";
+                    var substring = str.Split(symbol);
+                    for (int i = 0; i < substring.Length; i++)
+                    {
+                        if (i % 2 == 0)
+                            resString += substring[i];
+                    }
+                    str = resString;
                 }
-                str = resString;
             }
-            int amount2 = new Regex(symbol2).Matches(str).Count;
-            if (amount2 % 2 == 0)
-            {
-                string resString = "";
-                var substring = str.Split(symbol2);
-                for (int i = 0; i < substring.Length; i++)
-                {
-                    if (i % 2 == 0)
-                        resString += substring[i];
-                }
-                str = resString;
-            }
-
             return str;
         }
     }
